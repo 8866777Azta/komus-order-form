@@ -400,16 +400,22 @@
         };
 
         try {
-          const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
-          const result = await response.json();
-          if (result.result !== 'success') throw new Error(result.error || 'Ошибка отправки');
-          form.reset();
-          status.className = 'status visible success';
-          status.textContent = `Заявка ${payload.requestId} отправлена. Строк записано: ${result.rowsWritten || rows.length}.`;
+  await fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+
+  form.reset();
+  status.className = 'status visible success';
+  status.textContent = `Заявка ${payload.requestId} отправлена. Строк подготовлено: ${rows.length}.`;
+} catch (error) {
+  status.className = 'status visible error';
+  status.textContent = 'Не удалось отправить данные. Проверьте URL скрипта, доступ веб-приложения и структуру листа.';
+} finally {
+  submitButton.disabled = false;
+}
+         
         } catch (error) {
           status.className = 'status visible error';
           status.textContent = 'Не удалось отправить данные. Проверьте URL скрипта, доступ веб-приложения и структуру листа.';
