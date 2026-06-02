@@ -369,38 +369,58 @@
         }, 0);
       });
 
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!form.reportValidity()) return;
-        const rows = getRowsData();
-        if (!rows.length) {
-          status.className = 'status visible error';
-          status.textContent = 'Добавьте хотя бы одну позицию, где заполнены артикул и количество.';
-          return;
-        }
-        if (SCRIPT_URL === 'YOUR_SCRIPT_URL') {
-          status.className = 'status visible error';
-          status.textContent = 'Сначала вставьте URL вашего Google Apps Script в переменную SCRIPT_URL.';
-          return;
-        }
-        const submitButton = form.querySelector('.submit-btn');
-        submitButton.disabled = true;
-        status.className = 'status visible';
-        status.textContent = 'Отправляем данные...';
+     form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!form.reportValidity()) return;
 
-        const payload = {
-          requestId: 'REQ-' + Date.now(),
-          createdAt: new Date().toISOString(),
-          requester: form.requester.value.trim(),
-          location: form.location.value,
-          department: form.department.value.trim(),
-          generalComment: form.generalComment.value.trim(),
-          totalAmount: rows.reduce((sum, item) => sum + (item.quantity * (item.price || 0)), 0),
-          items: rows
-        };
+  const rows = getRowsData();
+  if (!rows.length) {
+    status.className = 'status visible error';
+    status.textContent = 'Добавьте хотя бы одну позицию, где заполнены артикул и количество.';
+    return;
+  }
+
+  if (SCRIPT_URL === 'YOUR_SCRIPT_URL') {
+    status.className = 'status visible error';
+    status.textContent = 'Сначала вставьте URL вашего Google Apps Script в переменную SCRIPT_URL.';
+    return;
+  }
+
+  const submitButton = form.querySelector('.submit-btn');
+  submitButton.disabled = true;
+  status.className = 'status visible';
+  status.textContent = 'Отправляем данные...';
+
+  const payload = {
+    requestId: 'REQ-' + Date.now(),
+    createdAt: new Date().toISOString(),
+    requester: form.requester.value.trim(),
+    location: form.location.value,
+    department: form.department.value.trim(),
+    generalComment: form.generalComment.value.trim(),
+    totalAmount: rows.reduce((sum, item) => sum + (item.quantity * (item.price || 0)), 0),
+    items: rows
+  };
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+
+    form.reset();
+    status.className = 'status visible success';
+    status.textContent = `Заявка ${payload.requestId} отправлена. Строк подготовлено: ${rows.length}.`;
+  } catch (error) {
+    status.className = 'status visible error';
+    status.textContent = 'Не удалось отправить данные. Проверьте URL скрипта, доступ веб-приложения и структуру листа.';
+  } finally {
+    submitButton.disabled = false;
+  }
+});
 
         try {
-          try {
   await fetch(SCRIPT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
