@@ -402,23 +402,6 @@
     items: rows
   };
 
-  try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-
-    form.reset();
-    status.className = 'status visible success';
-    status.textContent = `Заявка ${payload.requestId} отправлена. Строк подготовлено: ${rows.length}.`;
-  } catch (error) {
-    status.className = 'status visible error';
-    status.textContent = 'Не удалось отправить данные. Проверьте URL скрипта, доступ веб-приложения и структуру листа.';
-  } finally {
-    submitButton.disabled = false;
-  }
-});
 
         try {
   await fetch(SCRIPT_URL, {
