@@ -550,47 +550,56 @@
       }
     }
 
-@media screen and (max-width: 720px){
-  .app-shell{
-    width:min(100% - 1rem, 100%);
-    padding-bottom:6rem;
-  }
+    @media screen and (max-width: 720px){
+      .app-shell{
+        width:min(100% - 1rem, 100%);
+        padding-bottom:6rem;
+      }
 
-  .topbar{
-    padding-bottom:var(--space-4);
-  }
+      .topbar{
+        padding-bottom:var(--space-4);
+      }
 
-  .facts,
-  .meta-grid{
-    grid-template-columns:1fr;
-  }
+      .facts,
+      .meta-grid{
+        grid-template-columns:1fr;
+      }
 
-  .table-wrap{
-    display:none !important;
-  }
+      .table-wrap{
+        display:none !important;
+      }
 
-  #mobileRows,
-  .mobile-cards{
-    display:grid !important;
-    gap:var(--space-4);
-  }
+      #mobileRows,
+      .mobile-cards{
+        display:grid !important;
+        gap:var(--space-4);
+      }
 
-  .table-scrollbar{
-    display:none !important;
-  }
+      .table-scrollbar{
+        display:none !important;
+      }
 
-  .summary{
-    grid-template-columns:1fr;
-  }
+      .summary{
+        grid-template-columns:1fr;
+      }
 
-  .summary-actions{
-    justify-content:stretch;
-  }
+      .summary-actions{
+        justify-content:stretch;
+      }
 
-  .summary-actions button{
-    width:100%;
-  }
-}
+      .summary-actions button{
+        width:100%;
+      }
+
+      .sticky-bar{
+        position:static;
+        bottom:auto;
+        margin-top:var(--space-5);
+        padding-top:var(--space-4);
+        background:transparent;
+      }
+    }
+
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -970,7 +979,6 @@
         itemsCounter.textContent = `${count} ${label} в заказе`;
       }
 
-      // Стартовые примеры строк
       addRow({ sku: '2001915', product: 'Бумага офисная', quantity: '2', unit: 'пач' });
       addRow({ sku: '515916', product: 'Кофе', quantity: '1', unit: 'шт' });
       syncTableScrollbar();
